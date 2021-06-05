@@ -29,6 +29,7 @@ public:
     int smallestele();
     int smallestelehelper(bt *node);
     void deleteele(int val);
+    void deleteelehelper(bt *, int);
     int countnodes();
     int countnodeshelper(bt *node);
     int countinternalnodes();
@@ -37,7 +38,10 @@ public:
     int countexternalnodeshelper(bt *node);
     int height();
     int heighthelper(bt *node);
+    void levelorder();
     void mirror();
+    bt *largestsubs(bt *);
+    bt *smallestsubs(bt *);
 };
 void binarytree::insertnode(int val)
 {
@@ -173,17 +177,85 @@ int binarytree::countexternalnodeshelper(bt *node)
     else
         return countexternalnodeshelper(node->left) + countexternalnodeshelper(node->right);
 }
-int binarytree::height(){
+int binarytree::height()
+{
     return heighthelper(root);
 }
-int binarytree::heighthelper(bt *node){
-    if(node == NULL)
+int binarytree::heighthelper(bt *node)
+{
+    if (node == NULL)
         return 0;
-    else{
+    else
+    {
         int leftheight, rightheight;
         leftheight = heighthelper(node->left);
         rightheight = heighthelper(node->right);
-        return max(leftheight,rightheight) +1;
+        return max(leftheight, rightheight) + 1;
+    }
+}
+void binarytree::levelorder()
+{
+    queue<bt *> q;
+    q.push(root);
+    while (q.size() > 0)
+    {
+        bt *node = q.front();
+        cout << node->data << " ";
+        q.pop();
+        if (node->left != NULL)
+        {
+            q.push(node->left);
+        }
+        if (node->right != NULL)
+        {
+            q.push(node->right);
+        }
+    }
+}
+bt *binarytree::largestsubs(bt *node)
+{
+    if (node == NULL || node->right == NULL)
+        return node;
+    else
+        return largestsubs(node->right);
+}
+bt *binarytree::smallestsubs(bt *node){
+    if (node == NULL || node->left == NULL)
+        return node;
+    else
+        return smallestsubs(node->left);
+}
+void binarytree::deleteele(int val)
+{
+    deleteelehelper(root, val);
+}
+void binarytree::deleteelehelper(bt *tree, int val)
+{
+    if (tree == NULL)
+    {
+        cout << "\nTree is empty" << endl;
+        return;
+    }
+    bt *cur, *parent, *psuc,*suc, *ptr;
+    parent = tree;
+    cur = tree;
+    while(cur!= NULL && val!=cur->data){
+        parent = cur;
+        cur = (val<cur->data) ? cur->left:cur->right;
+    }
+    if(cur == NULL)
+    {
+        cout << "\nTree is empty" << endl;
+        return;
+    }
+    if(cur->left == NULL)
+        ptr = cur->right;
+    else if(cur->right == NULL)
+        ptr = cur->left;
+    else{
+        psuc = cur;
+        cur = cur->left;
+        
     }
 }
 int main()
@@ -202,10 +274,13 @@ int main()
     tree.insertnode(40);
     tree.preorder();
     cout << "\nSmallest Element: " << tree.smallestele() << endl;
-    cout << "\nLargest Element: " << tree.largestele() << endl;
-    cout << "\nTotal Nodes: " << tree.countnodes() << endl;
-    cout << "\nTotal Internal Nodes: " << tree.countinternalnodes() << endl;
-    cout << "\nTotal External Nodes: " << tree.countexternalnodes() << endl;
-    cout << "\nHeight: " << tree.height() << endl;
+    cout << "Largest Element: " << tree.largestele() << endl;
+    cout << "Total Nodes: " << tree.countnodes() << endl;
+    cout << "Total Internal Nodes: " << tree.countinternalnodes() << endl;
+    cout << "Total External Nodes: " << tree.countexternalnodes() << endl;
+    cout << "Height: " << tree.height() << endl;
+    cout << "Level Order Traversal: ";
+    tree.levelorder();
+    cout << endl;
     return 0;
 }
