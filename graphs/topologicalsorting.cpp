@@ -39,6 +39,32 @@ vector<int> toposort(vector<int> adjlist[], int v)
     return result;
 }
 
+vector<int> toposortbfs(vector<int> adjlist[], int v){
+    queue<int> q;
+    vector<int> indegree(v, 0);
+    for(int i=0; i<v; i++){
+        for(auto x: adjlist[i]){
+            indegree[x]++;
+        }
+    }
+    vector<int> result;
+    for(int i=0; i<v; i++){
+        if(indegree[i] == 0)
+            q.push(i);
+    }
+    while(!q.empty()){
+        int node = q.front();
+        q.pop();
+        result.push_back(node);
+        for(auto x: adjlist[node]){
+            indegree[x]--;
+            if(indegree[x] == 0){
+                q.push(x);
+            }
+        }
+    }
+    return result;
+}
 int main()
 {
 #ifndef ONLINE_JUDGE
@@ -57,7 +83,7 @@ int main()
         addEdge(adjlist, u, v);
     }
     vector<int> result;
-    result = toposort(adjlist, N);
+    result = toposortbfs(adjlist, N);
     for(int i=0; i<result.size(); i++){
         cout<<result[i]<<" ";
     }
