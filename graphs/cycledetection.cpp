@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-// Cycle bfs not working
+
 bool cyclebfs(vector<int> adj[], vector<bool> &visited)
 {
     for(int i=0; i<visited.size(); i++){
@@ -12,7 +12,7 @@ bool cyclebfs(vector<int> adj[], vector<bool> &visited)
                 int node = q.front().first;
                 int parent = q.front().second;
                 q.pop();
-                for(auto x: adj[parent]){
+                for(auto x: adj[node]){
                     if(!visited[x])
                     {   
                         q.push({x,node});

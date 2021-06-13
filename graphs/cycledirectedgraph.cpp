@@ -38,7 +38,33 @@ bool cycle(vector<int> adjlist[], int v)
     }
     return false;
 }
-
+bool cyclebfs(vector<int> adjlist[], int v){
+    queue<int> q;
+    vector<int> indegree(v, 0);
+    for(int i=0; i<v; i++){
+        for(auto x: adjlist[i]){
+            indegree[x]++;
+        }
+    }
+    int cnt=0;
+    for(int i=0; i<v; i++){
+        if(indegree[i] == 0)
+            q.push(i);
+    }
+    while(!q.empty()){
+        int node = q.front();
+        q.pop();
+        cnt++;
+        for(auto x: adjlist[node]){
+            indegree[x]--;
+            if(indegree[x] == 0){
+                q.push(x);
+            }
+        }
+    }
+    if(cnt == v) return false;
+    return true;
+}
 int main()
 {
 #ifndef ONLINE_JUDGE
@@ -56,6 +82,6 @@ int main()
         cin >> u >> v;
         addEdge(adjlist, u, v);
     }
-    cout << cycle(adjlist, v);
+    cout << cyclebfs(adjlist, v);
     return 0;
 }
